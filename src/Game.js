@@ -41,22 +41,22 @@ export default function Game({ verse, gameIndex, answerType, onComplete }) {
   const typing = useRef();
   const words = verse.text
     .trim()
-    .split(" ")
+    .split(/\s+/)
     .filter(w => w);
   const [fillInTheBlanks, setFillInTheBlanks] = useState([]);
   const [wordBank, setWordBank] = useState([]);
   const [wrongGuesses, setWrongGuesses] = useState([]);
 
   useEffect(() => {
-    const words = verse.text.trim().split(" ") || [];
+    const words = verse.text.trim().split(/\s+/) || [];
     let cleanedWords = words
       .map(word => word.replace(/\W/g, ""))
       .filter(w => w);
 
     let answer =
-      wordIndex < words.length - 1 ? words[wordIndex].replace(/\W/g, "") : "";
+      wordIndex < words.length ? words[wordIndex].replace(/\W/g, "") : "";
     if (
-      gameIndex === 3 &&
+      gameIndex === 2 &&
       fillInTheBlanks.length &&
       wordIndex < fillInTheBlanks.length
     ) {
@@ -66,7 +66,10 @@ export default function Game({ verse, gameIndex, answerType, onComplete }) {
     cleanedWords = uniq(cleanedWords).filter(w => w !== answer);
     cleanedWords = sampleSize(cleanedWords, 9);
     cleanedWords.push(answer);
-    cleanedWords = shuffle(cleanedWords);
+    // cleanedWords = shuffle(cleanedWords);
+    cleanedWords.sort(function (a, b) {
+      return a.toLowerCase().localeCompare(b.toLowerCase());
+    });
     setWordBank(cleanedWords);
   }, [wordIndex, verse.text, fillInTheBlanks, gameIndex]);
 

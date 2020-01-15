@@ -123,7 +123,7 @@ export default function Verses() {
                   memo.header = verse.plan51.title;
                 }
                 const gamesComplete = verse.progress.reduce((memo, game) => {
-                  memo += game.complete ? 1 : 0;
+                  memo += game.complete || game.disabled ? 1 : 0;
                   return memo;
                 }, 0);
                 memo.verses.push(

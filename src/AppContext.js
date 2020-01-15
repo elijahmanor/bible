@@ -37,7 +37,7 @@ EPHESIANS = EPHESIANS.map(({ chapter, verse }, index) => {
       { gameIndex: 0, complete: false, count: 0 },
       { gameIndex: 1, complete: false, count: 0 },
       { gameIndex: 2, complete: false, count: 0 },
-      { gameIndex: 3, complete: false, count: 0 },
+      { gameIndex: 3, complete: false, count: 0, disabled: true },
       { gameIndex: 4, complete: false, count: 0 }
     ]
   };
