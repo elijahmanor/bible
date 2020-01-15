@@ -17,6 +17,7 @@ import Menu from "@material-ui/core/Menu";
 import Chip from '@material-ui/core/Chip';
 import TagFacesIcon from '@material-ui/icons/TagFaces';
 import SettingsIcon from '@material-ui/icons/Settings';
+import FlashOnIcon from '@material-ui/icons/FlashOn';
 
 import { AppContext } from "./AppContext";
 import Progress from "./Progress";
@@ -158,7 +159,7 @@ export default function Verses() {
                         secondary={`${verse.text || "▒".repeat(28) }`}
                         secondaryTypographyProps={{ noWrap: true }}
                       />
-                      { false && <Chip variant="outlined" size="small" icon={<TagFacesIcon />} /> }
+                      { verse.streakInDays > 0 && <Chip variant="outlined" size="small" label={`${verse.streakInDays} day streak`} icon={<FlashOnIcon />} /> }
                     </ListItem>
                     <Divider component="li" />
                   </Fragment>

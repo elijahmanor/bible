@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import { format, addDays, formatDistanceToNow } from "date-fns";
+import { format, addDays, formatDistanceToNow, isYesterday } from "date-fns";
 
 let EPHESIANS = [23, 22, 21, 32, 33, 24];
 EPHESIANS = EPHESIANS.reduce((memo, numberOfVerses, chapterIndex) => {
@@ -39,7 +39,9 @@ EPHESIANS = EPHESIANS.map(({ chapter, verse }, index) => {
       { gameIndex: 2, complete: false, count: 0 },
       { gameIndex: 3, complete: false, count: 0, disabled: true },
       { gameIndex: 4, complete: false, count: 0 }
-    ]
+    ],
+    streakInDays: 0,
+    lastAccessed: null
   };
 });
 
@@ -62,6 +64,10 @@ const reducer = (state, action) => {
         }
         return game;
       });
+      if (verse.lastAccessed && isYesterday(new Date(verse.lastAccessed))) {
+        verse.streakInDays += 1;
+      }
+      verse.lastAccessed = Date.now();
       const newState = { ...state };
       window.localStorage.setItem("data", JSON.stringify(newState, null, 2));
       return newState;
