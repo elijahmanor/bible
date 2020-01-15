@@ -122,8 +122,12 @@ export default function Verses() {
                 if (shouldAddHeader) {
                   memo.header = verse.plan51.title;
                 }
+                const totalGames = verse.progress.reduce((memo, game) => {
+                  memo += !game.disabled ? 1 : 0;
+                  return memo;
+                }, 0 )
                 const gamesComplete = verse.progress.reduce((memo, game) => {
-                  memo += game.complete || game.disabled ? 1 : 0;
+                  memo += game.complete ? 1 : 0;
                   return memo;
                 }, 0);
                 memo.verses.push(
@@ -145,7 +149,7 @@ export default function Verses() {
                           height={40}
                           strokeWidth={5}
                           percentage={
-                            (gamesComplete / verse.progress.length) * 100
+                            (gamesComplete / totalGames) * 100
                           }
                         />
                       </ListItemAvatar>
