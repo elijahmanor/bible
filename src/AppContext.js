@@ -37,15 +37,13 @@ EPHESIANS = EPHESIANS.map(({ chapter, verse }, index) => {
       { gameIndex: 0, complete: false, count: 0 },
       { gameIndex: 1, complete: false, count: 0 },
       { gameIndex: 2, complete: false, count: 0 },
-      { gameIndex: 3, complete: false, count: 0, disabled: true },
+      { gameIndex: 3, complete: false, count: 0 },
       { gameIndex: 4, complete: false, count: 0 }
     ],
     streakInDays: 0,
     lastAccessed: null
   };
 });
-
-console.log({ EPHESIANS });
 
 const DATA = {
   planType: "plan51", // "plan51" or "plan31"
@@ -60,6 +58,7 @@ const reducer = (state, action) => {
       verse.progress = verse.progress.map(game => {
         if (game.gameIndex === action.gameIndex) {
           game.complete = true;
+          game.disabled = false;
           game.count += 1;
         }
         return game;

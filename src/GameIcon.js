@@ -2,12 +2,12 @@ import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 
-export default function GameIcon( { verse, setGameIndex, currentGameIndex, gameIndex, Icon } ) {
-    return           <IconButton
+export default function GameIcon({ verse, setGameIndex, currentGameIndex, gameIndex, Icon, onClick }) {
+  return <IconButton
     color={verse.progress[gameIndex].complete ? "primary" : "default"}
     aria-label="upload picture"
     component="span"
-    onClick={() => {
+    onClick={onClick ? onClick : () => {
       setGameIndex(gameIndex);
     }}
   >
@@ -26,5 +26,4 @@ export default function GameIcon( { verse, setGameIndex, currentGameIndex, gameI
       />
     </Badge>
   </IconButton>
-  }
-  
+}

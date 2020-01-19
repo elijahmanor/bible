@@ -7,6 +7,68 @@
   pointer-events: none;
 }
 
+body.light-mode {
+  transition: background-color 0.3s ease;
+}
+
+body.dark-mode {
+  background-color: #333;
+  color: #ccc;
+}
+
+body.dark-mode .makeStyles-root-1 {
+  background-color: #333;
+  color: white;
+}
+
+body.dark-mode .MuiAppBar-colorPrimary {
+  color: #fff;
+  background-color: black;
+}
+
+body.dark-mode .MuiTypography-colorTextSecondary {
+  color: #fff;
+}
+
+body.dark-mode .MuiListSubheader-root {
+  background-color: #666 !important;
+  color: #fff;
+}
+
+body.dark-mode svg circle:last-of-type {
+  stroke: #f50057;
+}
+
+body.dark-mode .MuiIconButton-root {
+  color: white;
+}
+
+body.dark-mode .MuiIconButton-colorPrimary {
+  color: rgb(245, 0, 87);
+}
+
+body.dark-mode .MuiBadge-badge {
+  color: #3f51b5;
+}
+
+body.dark-mode .MuiSlider-colorPrimary {
+  color: rgb(245, 0, 87);
+}
+
+body.dark-mode .MuiButton-outlinedPrimary {
+  color: rgb(245, 0, 87);
+  border-color: rgba(245, 0, 87, 0.5);
+}
+
+body.dark-mode .Verse-icon.Verse-icon--active {
+  border-bottom: 3px solid white;
+}
+
+body.dark-mode .MuiBadge-badge {
+  color: white;
+  background-color: #3f51b5;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -35,4 +97,12 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.Verse-icon {
+  border-bottom: 3px solid transparent;
+}
+
+.Verse-icon.Verse-icon--active {
+  border-bottom: 3px solid #f50057;
 }

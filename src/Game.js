@@ -1,11 +1,10 @@
-import React, { Fragment, useState, useEffect, useRef } from "react";
+import React, { useRef, Fragment, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import { sampleSize, uniq, shuffle } from "lodash";
 import Button from "@material-ui/core/Button";
-import { useSpring, animated } from "react-spring";
-import { motion } from "framer-motion";
+import FallingWords from "./FallingWords";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,6 +45,10 @@ export default function Game({ verse, gameIndex, answerType, onComplete }) {
   const [fillInTheBlanks, setFillInTheBlanks] = useState([]);
   const [wordBank, setWordBank] = useState([]);
   const [wrongGuesses, setWrongGuesses] = useState([]);
+  const myRef = useRef();
+  const width = myRef.current
+    ? parseInt(window.getComputedStyle(myRef.current).width, 10)
+    : 0;
 
   useEffect(() => {
     const words = verse.text.trim().split(/\s+/) || [];
@@ -63,11 +66,13 @@ export default function Game({ verse, gameIndex, answerType, onComplete }) {
       answer = words[fillInTheBlanks[wordIndex]].replace(/\W/g, "");
     }
 
-    cleanedWords = uniq(cleanedWords).filter(w => w !== answer);
+    cleanedWords = uniq(cleanedWords).filter(
+      w => w.toUpperCase() !== answer.toUpperCase()
+    );
     cleanedWords = sampleSize(cleanedWords, 9);
     cleanedWords.push(answer);
     // cleanedWords = shuffle(cleanedWords);
-    cleanedWords.sort(function (a, b) {
+    cleanedWords.sort(function(a, b) {
       return a.toLowerCase().localeCompare(b.toLowerCase());
     });
     setWordBank(cleanedWords);
@@ -127,7 +132,13 @@ export default function Game({ verse, gameIndex, answerType, onComplete }) {
       } else {
         setWrongGuesses([...wrongGuesses, guess]);
       }
+    } else if (gameIndex === 3) {
+      setGuess(guess);
     }
+  };
+
+  const handleWordIndexChange = index => {
+    setWordIndex(index);
   };
 
   useEffect(() => {
@@ -145,19 +156,14 @@ export default function Game({ verse, gameIndex, answerType, onComplete }) {
   useEffect(() => {
     if (answerType === "keyboard") {
       typing.current.focus();
+    } else {
+      setGuess("");
     }
-  });
-
-  const props = useSpring({
-    delay: 100,
-    opacity: 1,
-    from: { opacity: 0 },
-    config: { duration: 5000 }
-  });
+  }, [answerType, gameIndex]);
 
   return (
     <Fragment>
-      <p style={{ fontSize: "1.25rem" }}>
+      <p ref={myRef} style={{ fontSize: "1.25rem" }}>
         {gameIndex === 0 &&
           words.map((word, i) => (
             <span style={{ color: i >= wordIndex ? "#ccc" : "#000" }}>
@@ -220,22 +226,21 @@ export default function Game({ verse, gameIndex, answerType, onComplete }) {
               <span>{word} </span>
             );
           })}
-        {gameIndex === 3 && <div>Feature Coming...</div>
-        // words.map((word, i) => {
-        //   return <motion.div style={{ position: "absolute", x: "20px", y: "50px" }}    animate={{
-        //     y: 500
-        //   }}
-        //   transition={{ ease: "easeOut", duration: 2 }}
-        //   >
-        //         <span
-        //           style={{
-        //           }}
-        //         >
-        //           {word}
-        //         </span>{" "}
-        //       </motion.div>
-        // })
-        }
+        {gameIndex === 3 && width && (
+          <FallingWords
+            words={words}
+            width={width}
+            guess={guess}
+            onWordIndexChange={handleWordIndexChange}
+            onComplete={() => {
+              setComplete(true);
+              console.log("SUCCESS");
+            }}
+            onFailure={() => {
+              console.log("FAIL");
+            }}
+          />
+        )}
         {gameIndex === 4 &&
           words.map((word, i) => {
             return i >= wordIndex ? (
@@ -254,7 +259,7 @@ export default function Game({ verse, gameIndex, answerType, onComplete }) {
             );
           })}
       </p>
-      {guess && (
+      {guess && gameIndex !== 3 && (
         <div
           style={{
             position: "absolute",

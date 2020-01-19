@@ -14,163 +14,189 @@ import { navigate } from "@reach/router";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import Chip from '@material-ui/core/Chip';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
-import SettingsIcon from '@material-ui/icons/Settings';
-import FlashOnIcon from '@material-ui/icons/FlashOn';
+import Chip from "@material-ui/core/Chip";
+import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
+import SettingsIcon from "@material-ui/icons/Settings";
+import FlashOnIcon from "@material-ui/icons/FlashOn";
+import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
+import useDarkMode from "use-dark-mode";
+import Switch from "@material-ui/core/Switch";
 
 import { AppContext } from "./AppContext";
 import Progress from "./Progress";
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-        backgroundColor: "white"
-    },
-    menuButton: {
-        marginRight: theme.spacing(1)
-    },
-    title: {
-        flexGrow: 1
-    },
-    offset: {
-        marginTop: theme.spacing(6)
-    },
-    truncate: {
-        webkitLineClamp: 2
-    },
-    buttonMargin: {
-        "& > *": {
-        marginRight: theme.spacing(2),
-        marginBottom: theme.spacing(2)
-        }
+  root: {
+    flexGrow: 1,
+    backgroundColor: "white"
+  },
+  menuButton: {
+    marginRight: theme.spacing(1)
+  },
+  title: {
+    flexGrow: 1
+  },
+  offset: {
+    marginTop: theme.spacing(6)
+  },
+  truncate: {
+    webkitLineClamp: 2
+  },
+  buttonMargin: {
+    "& > *": {
+      marginRight: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     }
+  }
 }));
 
 export default function Verses() {
-    const classes = useStyles();
-    const { state, dispatch } = useContext(AppContext);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleMenu = event => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
-  
-    const handleReset = () => {
-      dispatch({ type: "reset" });
-      handleClose();
-    };
-  
-    return (
-      <>
-        <AppBar position="fixed">
-          <Toolbar>
+  const classes = useStyles();
+  const { state, dispatch } = useContext(AppContext);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const darkMode = useDarkMode(false);
+
+  const handleMenu = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleReset = () => {
+    dispatch({ type: "reset" });
+    handleClose();
+  };
+
+  return (
+    <>
+      <AppBar position="fixed">
+        <Toolbar>
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
+            <MenuBookIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            Memorize
+          </Typography>
+
+          <Switch
+            checked={darkMode.value}
+            onChange={darkMode.toggle}
+            value="checkedA"
+            inputProps={{ "aria-label": "secondary checkbox" }}
+          />
+
+          <IconButton
+            color="inherit"
+            onClick={() => {
+              navigate(`/review`);
+            }}
+          >
+            <PlaylistAddCheckIcon />
+          </IconButton>
+          <div>
             <IconButton
-              edge="start"
-              className={classes.menuButton}
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
               color="inherit"
-              aria-label="menu"
             >
-              <MenuBookIcon />
+              <SettingsIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              Memorize
-            </Typography>
-            {/* <IconButton color="inherit">
-              <FormatListNumberedIcon />
-            </IconButton> */}
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <SettingsIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleReset}>Reset Stats</MenuItem>
-              </Menu>
-            </div>
-          </Toolbar>
-        </AppBar>
-  
-        <List className={classes.offset}>
-          {
-            state.verses.reduce(
-              (memo, verse, index) => {
-                const shouldAddHeader =
-                  verse.plan51.title !== memo.header ? verse.plan51.title : "";
-                if (shouldAddHeader) {
-                  memo.header = verse.plan51.title;
-                }
-                const totalGames = verse.progress.reduce((memo, game) => {
-                  memo += !game.disabled ? 1 : 0;
-                  return memo;
-                }, 0 )
-                const gamesComplete = verse.progress.reduce((memo, game) => {
-                  memo += game.complete ? 1 : 0;
-                  return memo;
-                }, 0);
-                memo.verses.push(
-                  <Fragment key={verse.reference}>
-                    {shouldAddHeader && (
-                      <ListSubheader style={ {
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right"
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right"
+              }}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleReset}>Reset Stats</MenuItem>
+            </Menu>
+          </div>
+        </Toolbar>
+      </AppBar>
+
+      <List className={classes.offset}>
+        {
+          state.verses.reduce(
+            (memo, verse, index) => {
+              const shouldAddHeader =
+                verse.plan51.title !== memo.header ? verse.plan51.title : "";
+              if (shouldAddHeader) {
+                memo.header = verse.plan51.title;
+              }
+              const totalGames = verse.progress.reduce((memo, game) => {
+                memo += !game.disabled ? 1 : 0;
+                return memo;
+              }, 0);
+              const gamesComplete = verse.progress.reduce((memo, game) => {
+                memo += game.complete ? 1 : 0;
+                return memo;
+              }, 0);
+              memo.verses.push(
+                <Fragment key={verse.reference}>
+                  {shouldAddHeader && (
+                    <ListSubheader
+                      style={{
                         top: "56px",
                         background: "white"
-                      } }>{memo.header}</ListSubheader>
-                    )}
-                    <ListItem
-                      alignItems="flex-start"
-                      button
-                      onClick={() => navigate(`/verse/${verse.reference}`)}
+                      }}
                     >
-                      <ListItemAvatar>
-                        <Progress
-                          width={40}
-                          height={40}
-                          strokeWidth={5}
-                          percentage={
-                            (gamesComplete / totalGames) * 100
-                          }
-                        />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={`${verse.book} ${verse.chapter}:${verse.verse}`}
-                        secondary={`${verse.text || "▒".repeat(28) }`}
-                        secondaryTypographyProps={{ noWrap: true }}
+                      {memo.header}
+                    </ListSubheader>
+                  )}
+                  <ListItem
+                    alignItems="flex-start"
+                    button
+                    onClick={() => navigate(`/verse/${verse.reference}`)}
+                  >
+                    <ListItemAvatar>
+                      <Progress
+                        width={40}
+                        height={40}
+                        strokeWidth={5}
+                        percentage={(gamesComplete / totalGames) * 100}
                       />
-                      { verse.streakInDays > 0 && <Chip variant="outlined" size="small" label={`${verse.streakInDays} day streak`} icon={<FlashOnIcon />} /> }
-                    </ListItem>
-                    <Divider component="li" />
-                  </Fragment>
-                );
-                return memo;
-              },
-              { verses: [], header: "" }
-            ).verses
-          }
-        </List>
-      </>
-    );
-  }
-  
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={`${verse.book} ${verse.chapter}:${verse.verse}`}
+                      secondary={`${verse.text || "▒".repeat(28)}`}
+                      secondaryTypographyProps={{ noWrap: true }}
+                    />
+                    {verse.streakInDays > 0 && (
+                      <Chip
+                        variant="outlined"
+                        size="small"
+                        label={`${verse.streakInDays} day streak`}
+                        icon={<FlashOnIcon />}
+                      />
+                    )}
+                  </ListItem>
+                  <Divider component="li" />
+                </Fragment>
+              );
+              return memo;
+            },
+            { verses: [], header: "" }
+          ).verses
+        }
+      </List>
+    </>
+  );
+}

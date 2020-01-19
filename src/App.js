@@ -5,6 +5,7 @@ import { Router } from "@reach/router";
 import { AppContextProvider } from "./AppContext";
 import Verses from "./Verses";
 import Verse from "./Verse";
+import Review from "./Review";
 
 import "./App.css";
 
@@ -38,9 +39,10 @@ function App() {
   return (
     <div className={classes.root}>
       <AppContextProvider>
-        <Router>
+        <Router primary={false}>
           <Verses path="/" />
           <Verse path="verse/:reference" />
+          <Review path="review" />
         </Router>
       </AppContextProvider>
     </div>

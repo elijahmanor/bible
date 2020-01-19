@@ -17,6 +17,7 @@ import TouchAppIcon from "@material-ui/icons/TouchApp";
 import KeyboardIcon from "@material-ui/icons/Keyboard";
 import Slider from "@material-ui/core/Slider";
 import TuneIcon from "@material-ui/icons/Tune";
+import classNames from "classnames";
 
 import { AppContext } from "./AppContext";
 import Game from "./Game";
@@ -158,10 +159,9 @@ export default function Verse(props) {
           }}
         >
           <TuneIcon
-            style={{
-              borderBottom:
-                gameIndex === -1 ? "3px solid #f50057" : "3px solid transparent"
-            }}
+            className={classNames("Verse-icon", {
+              "Verse-icon--active": gameIndex === -1
+            })}
           />
         </IconButton>
         <GameIcon
@@ -190,6 +190,7 @@ export default function Verse(props) {
           setGameIndex={setGameIndex}
           currentGameIndex={gameIndex}
           gameIndex={3}
+          onClick={null /*() => alert("Coming soon...")*/}
           Icon={LooksFourIcon}
         />
         <GameIcon
@@ -258,6 +259,7 @@ export default function Verse(props) {
               });
               setGameIndex(-1);
             }}
+            onFailure={() => {}}
           />
         )}
       </div>
